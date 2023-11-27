@@ -5,6 +5,7 @@ Streamlit component for image annotation.
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://st-image-annotation.streamlit.app/)
 [![PyPI](https://img.shields.io/pypi/v/streamlit-image-annotation)](https://pypi.org/project/streamlit-image-annotation/)
 ![](./image/demo.gif)
+
 # Features
 * You can easily launch an image annotation tool using streamlit.
 * By customizing the pre- and post-processing, you can achieve your preferred annotation workflow.

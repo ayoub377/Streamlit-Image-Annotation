@@ -4,7 +4,7 @@ import {
   ComponentProps
 } from "streamlit-component-lib"
 import React, { useEffect, useState } from "react"
-import { ChakraProvider, Select, Box, Spacer, HStack, Center, Button, Text } from '@chakra-ui/react'
+import { ChakraProvider, Select, Box, Spacer, HStack, Center, Button, Text, Input } from '@chakra-ui/react'
 
 import useImage from 'use-image';
 
@@ -22,6 +22,7 @@ export interface PythonArgs {
 }
 
 const Detection = ({ args, theme }: ComponentProps) => {
+
   const {
     image_url,
     image_size,
@@ -34,8 +35,8 @@ const Detection = ({ args, theme }: ComponentProps) => {
   const params = new URLSearchParams(window.location.search);
   const baseUrl = params.get('streamlitUrl')
   const [image] = useImage(baseUrl + image_url)
-
   const [rectangles, setRectangles] = React.useState(
+
     bbox_info.map((bb, i) => {
       return {
         x: bb.bbox[0],
@@ -43,10 +44,13 @@ const Detection = ({ args, theme }: ComponentProps) => {
         width: bb.bbox[2],
         height: bb.bbox[3],
         label: bb.label,
+        token:bb.token,
         stroke: color_map[bb.label],
         id: 'bbox-' + i
-      }
+      } 
     }));
+
+  const [token,setToken] = React.useState<string>("")
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
   const [label, setLabel] = useState(label_list[0])
   const [mode, setMode] = React.useState<string>('Transform');
@@ -65,16 +69,27 @@ const Detection = ({ args, theme }: ComponentProps) => {
       setRectangles(rects)
     }
   }
+
+  const handleTokenInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Update the token state with the new input value
+    setToken(event.target.value);
+  };
+  
   const [scale, setScale] = useState(1.0)
+
+
   useEffect(() => {
     const resizeCanvas = () => {
       const scale_ratio = window.innerWidth * 0.8 / image_size[0]
       setScale(Math.min(scale_ratio, 1.0))
+
       Streamlit.setFrameHeight(image_size[1] * Math.min(scale_ratio, 1.0))
     }
+
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas()
   }, [image_size])
+
 
   return (
     <ChakraProvider>
@@ -97,7 +112,7 @@ const Detection = ({ args, theme }: ComponentProps) => {
                 strokeWidth={line_width}
               />
             </Box>
-            <Spacer />
+            <Spacer/>
             <Box>
               <Text fontSize='sm'>Mode</Text>
               <Select value={mode} onChange={(e) => { setMode(e.target.value) }}>
@@ -105,7 +120,14 @@ const Detection = ({ args, theme }: ComponentProps) => {
                   (m) =>
                     <option value={m}>{m}</option>
                 )}
+
               </Select>
+              <Input
+                type="text"
+                value={token}
+                onChange={handleTokenInputChange}
+                placeholder="Enter token"
+              />
               <Text fontSize='sm'>Class</Text>
               <Select value={label} onChange={handleClassSelectorChange}>
                 {label_list.map(
@@ -114,7 +136,6 @@ const Detection = ({ args, theme }: ComponentProps) => {
                 )
                 }
               </Select>
-
               <Button onClick={(e) => {
                 const currentBboxValue = rectangles.map((rect, i) => {
                   return {
@@ -123,15 +144,18 @@ const Detection = ({ args, theme }: ComponentProps) => {
                     label: rect.label
                   }
                 })
+
                 Streamlit.setComponentValue(currentBboxValue)
-              }}>Complete</Button>
+
+              }}>
+                Complete
+              </Button>
             </Box>
           </HStack>
         </Center>
       </ThemeSwitcher>
     </ChakraProvider>
   )
-
 }
 
 

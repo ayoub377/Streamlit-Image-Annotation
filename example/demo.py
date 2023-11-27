@@ -21,6 +21,7 @@ with mode[0]:
                         bboxes=st.session_state['result_dict_det'][target_image_path]['bboxes'], 
                         labels=st.session_state['result_dict_det'][target_image_path]['labels'], 
                         label_list=label_list, key=target_image_path+'_det')
+    
     if new_labels is not None:
         st.session_state['result_dict_det'][target_image_path]['bboxes'] = [v['bbox'] for v in new_labels]
         st.session_state['result_dict_det'][target_image_path]['labels'] = [v['label_id'] for v in new_labels]

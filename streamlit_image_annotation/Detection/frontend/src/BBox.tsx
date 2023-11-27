@@ -10,6 +10,7 @@ export interface RectProps {
   stroke: string,
   label: string,
 }
+
 export interface BBoxProps {
   rectProps: RectProps,
   onChange: any,
@@ -18,12 +19,14 @@ export interface BBoxProps {
   scale: number,
   strokeWidth: number
 }
+
 const BBox = (props: BBoxProps) => {
   const shapeRef = React.useRef<any>();
   const trRef = React.useRef<any>();
   const {
     rectProps, onChange, isSelected, onClick, scale, strokeWidth
   }: BBoxProps = props
+  
   const [moving, setMoving] = useState(false);
 
   React.useEffect(() => {
@@ -32,7 +35,6 @@ const BBox = (props: BBoxProps) => {
     trRef.current?.getLayer().batchDraw();
     //}
   }, [isSelected]);
-
 
   return (
     <React.Fragment>
@@ -64,6 +66,7 @@ const BBox = (props: BBoxProps) => {
         onTransformStart={(e) => {
           setMoving(true)
         }}
+        
         onTransformEnd={(e) => {
           // transformer is changing scale of the node
           // and NOT its width or height
@@ -88,6 +91,7 @@ const BBox = (props: BBoxProps) => {
           });
         }}
       />
+      
       <Transformer
         ref={trRef}
         resizeEnabled={isSelected}

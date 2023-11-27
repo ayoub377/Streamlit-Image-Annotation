@@ -32,6 +32,7 @@ def get_colormap(label_names, colormap_name='gist_rainbow'):
 #labels:
 #[0,3]
 #'''
+
 def detection(image_path, label_list, bboxes=None, labels=None, height=512, width=512, line_width=5.0, key=None) -> CustomComponent:
     image = Image.open(image_path)
     original_image_size = image.size
